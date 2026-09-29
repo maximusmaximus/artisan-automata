@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/maximusmaximus/artisan-automata/schemas/venice-allocation.schema.json",
+  "title": "ArtisanAutomataVeniceAllocation",
+  "description": "Non-secret record of a Venice.ai inference allocation issued by venice-key-manager.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "appSlug",
+    "allocatedAt",
+    "status",
+    "amountUsd",
+    "limitPeriod",
+    "keyType",
+    "model"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "string", "const": "1.0.0" },
+    "appSlug": { "type": "string", "pattern": "^[a-z0-9-]{3,48}$" },
+    "allocatedAt": { "type": "string", "format": "date-time" },
+    "status": {
+      "type": "string",
+      "enum": ["allocated", "skipped", "failed"]
+    },
+    "skipReason": { "type": "string" },
+    "amountUsd": { "type": "number", "minimum": 0 },
+    "limitPeriod": {
+      "type": "string",
+      "enum": ["EPOCH", "MONTH", "LIFETIME"]
+    },
+    "keyType": { "type": "string", "const": "INFERENCE" },
+    "category": { "type": "string", "default": "ArtisanAutomata" },
+    "keyId": { "type": "string" },
+    "keyLast6": { "type": "string", "maxLength": 6 },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sizeTier", "contextLength"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "sizeTier": {
+          "type": "string",
+          "enum": ["flash", "medium", "large"]
+        },
+        "contextLength": { "type": "integer", "minimum": 1 },
+        "privacy": { "type": "string" }
+      }
+    },
+    "manager": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "baseUrl": { "type": "string" },
+        "source": {
+          "type": "string",
+          "enum": ["http", "mcp", "cli"]
+        }
+      }
+    },
+    "account": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "usdRemaining": { "type": "number" },
+        "diemRemaining": { "type": "number" },
+        "nextEpochBegins": { "type": "string" }
+      }
+    }
+  }
+}
