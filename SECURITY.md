@@ -45,6 +45,17 @@ Do not implement “first authenticated user becomes ADMIN.” On a public URL t
 
 Hidden admin routes must still check the allowlist server-side. Obscurity is not authorization.
 
+## Venice.ai sub-keys
+
+Inference keys come from [venice-key-manager](https://github.com/maximusmaximus/venice-key-manager) MCP (`venice_create_sub_key`) or a native `INFERENCE` key. Recipe: [`docs/venice-mcp-subkey.md`](docs/venice-mcp-subkey.md).
+
+- Mint `SUB_KEY` / `INFERENCE` only. Never `ADMIN`.
+- Never copy `VENICE_ADMIN_KEY` or the manager pairing token into this repo or a generated app.
+- `VENICE_API_KEY` and `VENICE_INFERENCE_KEY` are aliases for the same secret. Server-only. Never `NEXT_PUBLIC_`.
+- Do not call `api.venice.ai` from the browser with the allocated key.
+- Ledger receipts may store key id and last 6 characters, never the raw token.
+- If MCP / the manager is down, skip Venice. Do not invent a key.
+
 ## Secrets
 
 Never commit:
@@ -53,7 +64,7 @@ Never commit:
 - OAuth client secrets
 - refresh tokens
 - user Drive JSON contents that were not explicitly published
-- API keys
+- API keys, `vkm_sub_` / `vkm_ext_` tokens, pairing codes
 
 Generated apps must ship `.env.example` with empty values and a README section that names every variable.
 

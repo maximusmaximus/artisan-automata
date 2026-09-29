@@ -56,6 +56,14 @@ Non-negotiable for every Artisan-Automata run. If a later phase conflicts with t
 - X OAuth is optional identity. X-only users keep Core storage until they link Google.
 - Admin is ADMIN_USER_IDS / ADMIN_EMAILS. No first-user genesis.
 
+## Venice inference
+
+- Preferred mint: venice-key-manager MCP `venice_create_sub_key` for project `ArtisanAutomata`. See docs/venice-mcp-subkey.md.
+- Request a USD cap and a model size. Default $0.50 / DAY, flash → tier `s`.
+- INFERENCE / SUB_KEY only. Never ADMIN. Never copy VENICE_ADMIN_KEY into an app.
+- Server routes only. Never NEXT_PUBLIC_VENICE_API_KEY.
+- If MCP is down, skip Venice and still ship Core.
+
 ## Output
 
 - Write files to the target repo. Chat gets a brief, not a novel.

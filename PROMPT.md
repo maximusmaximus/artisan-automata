@@ -52,6 +52,7 @@ Load and obey `prompts/constraints.md`. Summary:
 - Do not commit secrets.
 - Every interactive control must register an InfoAnchor for the I-walkthrough.
 - Creation state must validate against `schemas/creation-state.schema.json`.
+- Venice: MCP sub-key only (`docs/venice-mcp-subkey.md`). Never mint `ADMIN` keys. Skip if MCP is down.
 
 ## 4. Novelty protocol
 
@@ -88,7 +89,10 @@ Execute in order. Detailed specs are in `prompts/`.
 6. **Sharing & OG** — `prompts/06-sharing-og.md`  
    Slugs, `/view/[slug]`, `/api/og` when profile ≥ studio; hash-share when core.
 
-7. **Close the loop**  
+7. **Venice allocation** — `prompts/07-venice.md` and `docs/venice-mcp-subkey.md`  
+   If MCP is connected: `venice_create_project` (ArtisanAutomata) → `venice_create_external_key` → `venice_create_sub_key` ($0.50 / DAY, tier `s` unless overridden) → `venice_list_models` → write server-only env. Skip if tools are down.
+
+8. **Close the loop**  
    Tests for generative math + state round-trip.  
    App `README.md` + `.env.example` + `RUN.md`.  
    Append the pipeline ledger.
@@ -102,8 +106,9 @@ Chat / automation reply contains **only**:
 3. X sources or “first-principles (discovery unavailable)”
 4. Target repo URL
 5. What was deferred because of profile/secrets
-6. Test commands
-7. Ledger path written
+6. Venice allocation status (allocated / skipped / unused) — never the token
+7. Test commands
+8. Ledger path written
 
 All source files go to the target repo via GitHub tools (or the local workspace if GitHub is not connected and the operator asked for files).
 

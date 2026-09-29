@@ -41,6 +41,14 @@ Default: `studio` if the required secrets exist, otherwise **degrade to `core` a
 
 Admin is an **allowlist** (`ADMIN_USER_IDS` / `ADMIN_EMAILS`). The first person to log in is not an admin.
 
+## Venice inference (optional)
+
+Generated apps may receive a capped Venice.ai **sub-key** and a **model size** from [venice-key-manager](https://github.com/maximusmaximus/venice-key-manager). Preferred path is MCP:
+
+`venice_create_project` → `venice_create_external_key` → `venice_create_sub_key` → `venice_list_models`
+
+Recipe: [`docs/venice-mcp-subkey.md`](docs/venice-mcp-subkey.md). Defaults: `$0.50` / `DAY`, size `flash`, tier `s`. Never mint `ADMIN` keys. If MCP is down, skip Venice and still ship Core.
+
 ## Quick start with Grok
 
 1. Open this repo and copy [`PROMPT.md`](PROMPT.md).
@@ -58,9 +66,9 @@ PROMPT.md                 paste-ready master directive
 USAGE.md                  Chat / Automations / API recipes
 prompts/                  phase specs loaded by the master prompt
 schemas/                  creation-state JSON Schema + Prisma example
-templates/                Auth, Drive, walkthrough, OG starters
+templates/                Auth, Drive, walkthrough, OG, Venice starters
 ledger/                   novelty memory across runs
-docs/                     architecture, modules, security
+docs/                     architecture, modules, Venice allocation + MCP sub-key
 apps/                     optional landing pad for generated apps
 ```
 
@@ -71,6 +79,7 @@ apps/                     optional landing pad for generated apps
 - Fullscreen only after a user gesture.
 - Do not overwrite this pipeline repo with a generated app.
 - Do not dump a novel-length codebase into chat. Write files.
+- Do not commit Venice sub-key tokens or `VENICE_ADMIN_KEY`.
 
 See [`CODE_OF_USE.md`](CODE_OF_USE.md) and [`SECURITY.md`](SECURITY.md).
 

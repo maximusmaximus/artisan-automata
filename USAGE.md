@@ -27,6 +27,10 @@ Target owner: maximusmaximus
 Output: new public GitHub repository named after the app
 Discovery window: last 7 days on X
 Do not repeat mechanics listed in ledger/prior-runs.md
+Venice: mcp
+Venice allocation USD: 0.50
+Venice model size: flash
+Venice model tier: s
 ```
 
 4. Let Grok finish discovery **before** it writes code. If the concept is wrong, stop it there.
@@ -53,13 +57,14 @@ Source of truth: https://github.com/maximusmaximus/artisan-automata
 2. Resolve profile: studio if AUTH_GOOGLE_ID, AUTH_SECRET, and DATABASE_URL are available in the operator notes; otherwise core.
 3. Discover recent experimental web art on X with X tools (no scraping).
 4. Synthesize a novel art-making web app that does not repeat the ledger.
-5. Create a new public GitHub repo under maximusmaximus named after the app slug.
-6. Write the complete application into that repo.
-7. Append ledger/prior-runs.md and add ledger/runs/<date>-<slug>.md back on artisan-automata.
-8. Reply with: app name, repo URL, mechanic in one sentence, profile used, and leftover work.
+5. If venice-key-manager MCP is connected, mint a SUB_KEY for the app using docs/venice-mcp-subkey.md (project ArtisanAutomata, amount $0.50/DAY, tier s). Never mint ADMIN keys.
+6. Create a new public GitHub repo under maximusmaximus named after the app slug.
+7. Write the complete application into that repo.
+8. Append ledger/prior-runs.md and add ledger/runs/<date>-<slug>.md back on artisan-automata.
+9. Reply with: app name, repo URL, mechanic in one sentence, profile used, Venice allocation status, and leftover work.
 ```
 
-Do not put OAuth client secrets into the automation prompt. Point the generated app at env vars instead.
+Do not put OAuth client secrets or Venice tokens into the automation prompt. Point the generated app at env vars instead.
 
 ---
 
@@ -80,6 +85,7 @@ Suggested operator message:
 ```text
 Run Artisan-Automata against my GitHub (maximusmaximus).
 Profile core. Create the app as a new public repo.
+Venice: mcp. Allocation USD 0.50. Model size flash.
 When finished, update the pipeline ledger.
 ```
 
@@ -130,10 +136,30 @@ These flags may be added to any run:
 | `Target: new-repo\|apps/<slug>\|existing-repo` | Where files go. |
 | `Visibility: public\|private` | Default public for generated apps unless told otherwise. |
 | `Discovery: x\|ledger-only\|operator-concept` | Skip X if the operator already supplied the mechanic. |
+| `Venice: mcp\|http\|off\|auto` | `mcp` uses Key Manager MCP sub-keys. `auto` tries MCP then HTTP then skip. |
+| `Venice allocation USD: <n>` | Sub-key cap. Default `0.50` (VKM default is `0.25` if omitted). |
+| `Venice model size: flash\|medium\|large` | Artisan size class. |
+| `Venice model tier: xs\|s\|m\|l\|xl` | Key Manager ceiling. Default `s`. |
+
+MCP sub-key recipe: [docs/venice-mcp-subkey.md](docs/venice-mcp-subkey.md).
 
 ---
 
-## 7. What not to do
+## 7. Venice MCP sub-key
+
+When `Venice: mcp` (or `auto` and MCP is connected):
+
+1. Connect [venice-key-manager](https://github.com/maximusmaximus/venice-key-manager) (`python run.py --mcp`).
+2. Follow [docs/venice-mcp-subkey.md](docs/venice-mcp-subkey.md):
+   `venice_list_projects` / `venice_create_project` → `venice_create_external_key` → `venice_create_sub_key` → `venice_list_models` → `venice_test_inference`.
+3. Write the sub-key token only to the generated app's `.env.local` as `VENICE_API_KEY` and `VENICE_INFERENCE_KEY`.
+4. Record key id + USD + model in the ledger. Never commit the token.
+
+If MCP is down, skip Venice and still ship Core.
+
+---
+
+## 8. What not to do
 
 - Do not initialize a new copy of *this* pipeline repo every run.
 - Do not scrape X, Twitter, or any site. Use Grok X tools.
@@ -142,3 +168,5 @@ These flags may be added to any run:
 - Do not call `requestFullscreen()` on page load.
 - Do not paste OAuth secrets into source, README, or the ledger.
 - Do not clone an existing CodePen / shadertoy / X demo and rename it.
+- Do not mint Venice `ADMIN` keys for generated apps.
+- Do not copy `VENICE_ADMIN_KEY` into an app repo.
