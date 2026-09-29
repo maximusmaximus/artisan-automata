@@ -20,6 +20,8 @@ Write the application into a **separate target**:
 
 Every run must differ in mechanic, visual system, and name from prior runs listed in `ledger/prior-runs.md`.
 
+Every generated app **must reference this pipeline** so the fleet can be aggregated. See `docs/aggregation.md`.
+
 ## 2. Profile resolution
 
 Read any operator override first (`Profile: core | cloud | studio`).
@@ -53,6 +55,7 @@ Load and obey `prompts/constraints.md`. Summary:
 - Every interactive control must register an InfoAnchor for the I-walkthrough.
 - Creation state must validate against `schemas/creation-state.schema.json`.
 - Venice: MCP sub-key only (`docs/venice-mcp-subkey.md`). Never mint `ADMIN` keys. Skip if MCP is down.
+- Every generated app must include `artisan-automata.json` pointing at this pipeline.
 
 ## 4. Novelty protocol
 
@@ -94,7 +97,9 @@ Execute in order. Detailed specs are in `prompts/`.
 
 8. **Close the loop**  
    Tests for generative math + state round-trip.  
-   App `README.md` + `.env.example` + `RUN.md`.  
+   App `README.md` + `.env.example` + `RUN.md` + `artisan-automata.json`.  
+   Stamp `package.json` (`keywords`, `artisanAutomata`) and render `ProvenanceMark`.  
+   Add GitHub topic `artisan-automata` when possible.  
    Append the pipeline ledger.
 
 ## 6. Output contract
@@ -120,12 +125,14 @@ LICENSE
 RUN.md
 .env.example
 package.json
-app/layout.tsx
+artisan-automata.json          # fleet stamp — do not omit
+app/layout.tsx                 # must render ProvenanceMark
 app/page.tsx
 app/globals.css
 components/info/InfoToggle.tsx
 components/info/InfoAnchor.tsx
 components/info/WalkthroughProvider.tsx
+components/ProvenanceMark.tsx
 store/walkthrough.ts
 lib/state/schema.ts
 lib/state/serialize.ts
@@ -133,6 +140,8 @@ lib/engine/          # renderer
 lib/audio/           # web audio / tone
 public/
 ```
+
+`artisan-automata.json` must set `generator` to `artisan-automata` and `pipeline` to `https://github.com/maximusmaximus/artisan-automata`. Validate against `schemas/provenance.schema.json`.
 
 Studio adds `auth.ts`, Drive client, Prisma schema, `/explore`, `/view/[slug]`, `/api/og`, `/admin`.
 

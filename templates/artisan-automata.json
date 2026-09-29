@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "generator": "artisan-automata",
+  "pipeline": "https://github.com/maximusmaximus/artisan-automata",
+  "appName": "ExampleApp",
+  "appSlug": "example-app",
+  "mechanicId": "example_mechanic",
+  "profile": "core",
+  "createdAt": "2026-09-29T00:00:00.000Z",
+  "appRepo": "https://github.com/maximusmaximus/example-app",
+  "engine": "webgl",
+  "venice": {
+    "status": "skipped"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/maximusmaximus/artisan-automata/schemas/provenance.schema.json",
+  "title": "ArtisanAutomataProvenance",
+  "description": "Machine-readable stamp written into every generated app so the fleet can be aggregated.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "generator",
+    "pipeline",
+    "appName",
+    "appSlug",
+    "mechanicId",
+    "profile",
+    "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "string", "const": "1.0.0" },
+    "generator": { "type": "string", "const": "artisan-automata" },
+    "pipeline": {
+      "type": "string",
+      "const": "https://github.com/maximusmaximus/artisan-automata"
+    },
+    "appName": { "type": "string", "minLength": 1 },
+    "appSlug": { "type": "string", "pattern": "^[a-z0-9-]{3,48}$" },
+    "mechanicId": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+    "profile": { "type": "string", "enum": ["core", "cloud", "studio"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "appRepo": { "type": "string", "description": "HTTPS URL of the generated app repository when known." },
+    "engine": { "type": "string", "enum": ["webgl", "canvas2d", "svg"] },
+    "venice": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": { "type": "string", "enum": ["allocated", "skipped", "unused"] },
+        "model": { "type": "string" },
+        "modelSize": { "type": "string", "enum": ["flash", "medium", "large"] },
+        "modelTier": { "type": "string", "enum": ["xs", "s", "m", "l", "xl"] },
+        "amountUsd": { "type": "number" }
+      }
+    }
+  }
+}
