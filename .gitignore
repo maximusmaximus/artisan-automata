@@ -1,0 +1,16 @@
+node_modules/
+.next/
+.vercel/
+.env
+.env.local
+.env.*.local
+*.pem
+.DS_Store
+.idea/
+.vscode/
+coverage/
+dist/
+apps/*/
+!apps/README.md
+ledger/runs/*.md
+!ledger/runs/.gitkeep
